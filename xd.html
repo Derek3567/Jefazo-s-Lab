@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pantalla de Entrada - Jefazo's Lab</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #020611, #000);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    perspective: 2000px;
+  }
+
+  /* --- Puertas --- */
+  .door {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.15),
+                inset 0 -5px 25px rgba(0, 255, 255, 0.15),
+                0 0 60px rgba(0, 255, 255, 0.1);
+    background:
+      repeating-linear-gradient(0deg, #999 0 2px, #aaa 2px 4px),
+      linear-gradient(135deg, #bfc5c7, #666);
+    background-blend-mode: overlay;
+  }
+
+  .door::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 70%);
+    opacity: 0.3;
+    mix-blend-mode: screen;
+  }
+
+  /* --- Efecto de brillo en movimiento --- */
+  .door::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shine 6s infinite linear;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-50%); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translateX(50%); }
+    100% { transform: translateX(200%); opacity: 0; }
+  }
+
+  /* --- Rayos de energía --- */
+  .door.top::before,
+  .door.bottom::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, #00eaff, #00ffff, #ffffff, #00ffff, #00eaff);
+    filter: drop-shadow(0 0 6px cyan);
+    animation: glow 1.8s infinite ease-in-out;
+  }
+
+  .door.top::before {
+    bottom: 0;
+    clip-path: polygon(0 50%, 5% 0, 10% 50%, 15% 0, 20% 50%, 25% 0, 30% 50%, 35% 0, 40% 50%, 45% 0, 50% 50%, 55% 0, 60% 50%, 65% 0, 70% 50%, 75% 0, 80% 50%, 85% 0, 90% 50%, 95% 0, 100% 50%);
+  }
+
+  .door.bottom::before {
+    top: 0;
+    clip-path: polygon(0 50%, 5% 100%, 10% 50%, 15% 100%, 20% 50%, 25% 100%, 30% 50%, 35% 100%, 40% 50%, 45% 100%, 50% 50%, 55% 100%, 60% 50%, 65% 100%, 70% 50%, 75% 100%, 80% 50%, 85% 100%, 90% 50%, 95% 100%, 100% 50%);
+  }
+
+  @keyframes glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; filter: drop-shadow(0 0 12px cyan); }
+  }
+
+  .door.top {
+    top: 0;
+    transform-origin: top center;
+  }
+
+  .door.bottom {
+    bottom: 0;
+    transform-origin: bottom center;
+  }
+
+  .door.open.top {
+    transform: rotateX(-100deg);
+  }
+
+  .door.open.bottom {
+    transform: rotateX(100deg);
+  }
+
+  /* --- Logo central --- */
+  .logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow:
+      0 0 25px rgba(0, 255, 255, 0.8),
+      inset 0 0 30px rgba(255, 255, 255, 0.15),
+      0 0 50px rgba(0, 150, 255, 0.5);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    background: radial-gradient(circle, rgba(0,255,255,0.3), transparent);
+  }
+
+  .logo:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow:
+      0 0 50px rgba(0, 255, 255, 1),
+      inset 0 0 40px rgba(255, 255, 255, 0.2);
+  }
+
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Luces ambientales */
+  .ambient-light {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(0,255,255,0.15), transparent 70%);
+    pointer-events: none;
+    animation: pulse 3s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.35; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="ambient-light"></div>
+  <div class="door top"></div>
+  <div class="door bottom"></div>
+
+  <div class="logo" id="logo">
+    <img src="Logo Jefazo´s Lab.png" alt="Logo Jefazo's Lab">
+  </div>
+</div>
+
+<script>
+  const logo = document.getElementById('logo');
+  const topDoor = document.querySelector('.door.top');
+  const bottomDoor = document.querySelector('.door.bottom');
+  let opened = false;
+
+  logo.addEventListener('click', () => {
+    if (!opened) {
+      topDoor.classList.add('open');
+      bottomDoor.classList.add('open');
+      opened = true;
+
+      // Efecto final: después de abrir, cambia el fondo o redirige
+      setTimeout(() => {
+        document.querySelector('.container').style.display = 'none';
+        document.body.style.background = '#fdfdfd';
+      }, 2800);
+    }
+  });
+</script>
+
+</body>
+</html>
