@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-cyan: #00ffff;
+      --neon-pink: #ff00ff;
+      --dark-bg: #0a0e17;
+      --glass: rgba(10, 14, 23, 0.7);
+      --border-glow: 0 0 15px rgba(0, 255, 255, 0.6);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background: var(--dark-bg);
+      color: #e0f7fa;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px 20px;
+    }
+
+    #particles {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 45px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                  0 0 30px rgba(0, 255, 255, 0.3);
+      border: 1px solid rgba(0, 255, 255, 0.4);
+      position: relative;
+      overflow: hidden;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 25s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--neon-cyan);
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 12px;
+      text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+      letter-spacing: 3px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #80deea;
+      font-size: 17px;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+
+    .pregunta {
+      background: rgba(15, 25, 40, 0.6);
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pregunta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
+      transition: 0.6s;
+    }
+
+    .pregunta:hover::before {
+      left: 100%;
+    }
+
+    .pregunta:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: var(--border-glow), 0 15px 30px rgba(0, 255, 255, 0.2);
+      border-color: var(--neon-cyan);
+    }
+
+    .pregunta p {
+      color: #ffffff;
+      font-weight: 500;
+      margin-bottom: : 18px;
+      font-size: 18px;
+      text-shadow: 0 0 5px rgba(255,255,255,0.3);
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      margin: 10px 0;
+      background: rgba(0, 255, 255, 0.08);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      font-size: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    label::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 100%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+      transition: 0.4s;
+      z-index: -1;
+    }
+
+    label:hover::before {
+      width: 100%;
+    }
+
+    label:hover {
+      color: white;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      transform: translateX(5px);
+    }
+
+    input[type="radio"] {
+      margin-right: 14px;
+      accent-color: var(--neon-cyan);
+      transform: scale(1.3);
+      filter: drop-shadow(0 0 8px var(--neon-cyan));
+    }
+
+    .feedback {
+      margin-top: 15px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      display: none;
+      animation: pulse 0.6s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .correcta {
+      background: rgba(76, 175, 80, 0.25);
+      color: #a8e6cf;
+      border: 1px solid #4caf50;
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .incorrecta {
+      background: rgba(244, 67, 54, 0.25);
+      color: #ff8a80;
+      border: 1px solid #f44336;
+      box-shadow: 0 0 15px rgba(244, 67, 54, 0.4);
+    }
+
+    button {
+      display: block;
+      margin: 45px auto;
+      padding: 18px 55px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 21px;
+      font-weight: bold;
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px; height: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 255, 255, 0.7);
+      text-shadow: 0 0 20px white: white;
+    }
+
+    .puntaje-final {
+      text-align: center;
+      margin-top: 40px;
+      padding: 28px;
+      background: rgba(0, 255, 255, 0.15);
+      border-radius: 18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 20px var(--neon-cyan);
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 20px rgba(0,255,255,0.4); }
+      to { box-shadow: 0 0 40px rgba(0,255,255,0.8); }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="container">
+    <h1>Examen de Retroalimentacion </h1>
+    <p class="subtitle">10 Preguntas | Relaciones Interespecíficas | Retroalimentacion</p>
+
+    <!-- PREGUNTA 1 -->
+    <div class="pregunta" id="preg1">
+      <p>1. Abejas polinizan flores y obtienen néctar.</p>
+      <label><input type="radio" name="p1" value="a"> a) Parasitismo</label>
+      <label><input type="radio" name="p1" value="b"> b) Mutualismo</label>
+      <label><input type="radio" name="p1" value="c"> c) Comensalismo</label>
+      <label><input type="radio" name="p1" value="d"> d) Competencia</label>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <!-- PREGUNTA 2 -->
+    <div class="pregunta" id="preg2">
+      <p>2. Rémora come restos del tiburón. Tiburón no se afecta.</p>
+      <label><input type="radio" name="p2" value="a"> a) Mutualismo</label>
+      <label><input type="radio" name="p2" value="b"> b) Comensalismo</label>
+      <label><input type="radio" name="p2" value="c"> c) Parasitismo</label>
+      <label><input type="radio" name="p2" value="d"> d) Depredación</label>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <!-- PREGUNTA 3 -->
+    <div class="pregunta" id="preg3">
+      <p>3. Lombriz intestinal roba nutrientes al humano.</p>
+      <label><input type="radio" name="p3" value="a"> a) Mutualismo</label>
+      <label><input type="radio" name="p3" value="b"> b) Comensalismo</label>
+      <label><input type="radio" name="p3" value="c"> c) Parasitismo</label>
+      <label><input type="radio" name="p3" value="d"> d) Competencia</label>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <!-- PREGUNTA 4 -->
+    <div class="pregunta" id="preg4">
+      <p>4. Dos aves compiten por pocas semillas.</p>
+      <label><input type="radio" name="p4" value="a"> a) Mutualismo</label>
+      <label><input type="radio" name="p4" value="b"> b) Depredación</label>
+      <label><input type="radio" name="p4" value="c"> c) Competencia</label>
+      <label><input type="radio" name="p4" value="d"> d) Comensalismo</label>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <!-- PREGUNTA 5 -->
+    <div class="pregunta" id="preg5">
+      <p>5. León caza y come cebra.</p>
+      <label><input type="radio" name="p5" value="a"> a) Parasitismo</label>
+      <label><input type="radio" name="p5" value="b"> b) Depredación</label>
+      <label><input type="radio" name="p5" value="c"> c) Competencia</label>
+      <label><input type="radio" name="p5" value="d"> d) Mutualismo</label>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <!-- PREGUNTA 6 -->
+    <div class="pregunta" id="preg6">
+      <p>6. Liquen: hongo da refugio, alga hace fotosíntesis.</p>
+      <label><input type="radio" name="p6" value="a"> a) Comensalismo</label>
+      <label><input type="radio" name="p6" value="b"> b) Mutualismo</label>
+      <label><input type="radio" name="p6" value="c"> c) Parasitismo</label>
+      <label><input type="radio" name="p6" value="d"> d) Competencia</label>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <!-- PREGUNTA 7 -->
+    <div class="pregunta" id="preg7">
+      <p>7. Garrapata chupa sangre de un perro.</p>
+      <label><input type="radio" name="p7" value="a"> a) Mutualismo</label>
+      <label><input type="radio" name="p7" value="b"> b) Comensalismo</label>
+      <label><input type="radio" name="p7" value="c"> c) Parasitismo</label>
+      <label><input type="radio" name="p7" value="d"> d) Depredación</label>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <!-- PREGUNTA 8 -->
+    <div class="pregunta" id="preg8">
+      <p>8. Dos leones pelean por la misma presa.</p>
+      <label><input type="radio" name="p8" value="a"> a) Competencia</label>
+      <label><input type="radio" name="p8" value="b"> b) Mutualismo</label>
+      <label><input type="radio" name="p8" value="c"> c) Comensalismo</label>
+      <label><input type="radio" name="p8" value="d"> d) Depredación</label>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <!-- PREGUNTA 9 -->
+    <div class="pregunta" id="preg9">
+      <p>9. Pez payaso vive en anémona. Anémona no gana ni pierde.</p>
+      <label><input type="radio" name="p9" value="a"> a) Mutualismo</label>
+      <label><input type="radio" name="p9" value="b"> b) Comensalismo</label>
+      <label><input type="radio" name="p9" value="c"> c) Parasitismo</label>
+      <label><input type="radio" name="p9" value="d"> d) Competencia</label>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <!-- PREGUNTA 10 -->
+    <div class="pregunta" id="preg10">
+      <p>10. Ácaros en la piel de un humano (no le hacen daño).</p>
+      <label><input type="radio" name="p10" value="a"> a) Parasitismo</label>
+      <label><input type="radio" name="p10" value="b"> b) Comensalismo</label>
+      <label><input type="radio" name="p10" value="c"> c) Mutualismo</label>
+      <label><input type="radio" name="p10" value="d"> d) Depredación</label>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <button onclick="corregirTest()">Enviar Respuestas</button>
+
+    <div class="puntaje-final" id="puntajeFinal"></div>
+  </div>
+
+  <script>
+    // Partículas
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speed: Math.random() * 0.5 + 0.2,
+        color: `hsl(${Math.random()*60 + 180}, 100%, 70%)`
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        p.y -= p.speed;
+        if (p.y < 0) p.y = canvas.height;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Respuestas correctas
+    const respuestasCorrectas = {
+      p1: { valor: "b", texto: "Mutualismo (+/+): Ambos se benefician." },
+      p2: { valor: "b", texto: "Comensalismo (+/0): Rémora gana, tiburón no se afecta." },
+      p3: { valor: "c", texto: "Parasitismo (+/–): Parásito gana, huésped pierde." },
+      p4: { valor: "c", texto: "Competencia (–/–): Ambos pierden al competir." },
+      p5: { valor: "b", texto: "Depredación (+/–): Depredador gana, presa pierde." },
+      p6: { valor: "b", texto: "Mutualismo (+/+): Hongo y alga se ayudan." },
+      p7: { valor: "c", texto: "Parasitismo (+/–): Garrapata se alimenta del perro." },
+      p8: { valor: "a", texto: "Competencia (–/–): Mismo recurso, intraspecífica." },
+      p9: { valor: "b", texto: "Comensalismo (+/0): Pez payaso protegido, anémona no afectada." },
+      p10: { valor: "b", texto: "Comensalismo (+/0): Ácaros comen piel muerta, humano no afectado." }
+    };
+
+    function corregirTest() {
+      let puntos = 0;
+      const total = 10;
+
+      for (let i = 1; i <= total; i++) {
+        const pregunta = `p${i}`;
+        const seleccionada = document.querySelector(`input[name="${pregunta}"]:checked`);
+        const feedback = document.getElementById(`fb${i}`);
+
+        feedback.style.display = 'none';
+        feedback.className = 'feedback';
+
+        if (!seleccionada) {
+          feedback.innerHTML = "No respondiste esta pregunta.";
+          feedback.classList.add('incorrecta');
+          feedback.style.display = 'block';
+          continue;
+        }
+
+        const correcta = respuestasCorrectas[pregunta].valor;
+        const texto = respuestasCorrectas[pregunta].texto;
+
+        if (seleccionada.value === correcta) {
+          feedback.innerHTML = texto;
+          feedback.classList.add('correcta');
+          puntos++;
+        } else {
+          const opcionCorrecta = document.querySelector(`input[name="${pregunta}"][value="${correcta}"]`).parentElement.innerText;
+          feedback.innerHTML = `Incorrecto. Correcta: <strong>${opcionCorrecta}</strong><br><em>${texto}</em>`;
+          feedback.classList.add('incorrecta');
+        }
+        feedback.style.display = 'block';
+      }
+
+      // Puntaje final
+      const mensajes = [
+        "¡GENIO ABSOLUTO DE LA ECOLOGÍA!",
+        "¡DOMINAS EL TEMA!",
+        "¡EXCELENTE! Casi perfecto.",
+        "¡MUY BIEN! Sigue así.",
+        "¡BIEN! Repasa un poco.",
+        "¡REPASA Y VUELVE MÁS FUERTE!"
+      ];
+      const idx = puntos === 10 ? 0 : puntos >= 8 ? 1 : puntos >= 7 ? 2 : puntos >= 6 ? 3 : puntos >= 4 ? 4 : 5;
+
+      document.getElementById("puntajeFinal").innerHTML = 
+        `${puntos}/${total} Aciertos<br><span style="font-size:19px; font-family: 'Roboto Mono';">${mensajes[idx]}</span>`;
+    }
+  </script>
+</body>
+</html>
